@@ -1,0 +1,22 @@
+x-logging: &logging
+  logging:
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  sophon:
+    <<: *logging
+    build:
+      context: src
+      dockerfile: Dockerfile
+    image: ${SOPHON_SN_IMAGE}:${SOPHON_SN_IMAGE_TAG}
+    restart: unless-stopped
+    ports:
+      - "${SOPHON_SN_PORT:-7007}:7007"
+    environment:
+      - OPERATOR_ADDRESS=${SOPHON_SN_OPERATOR_ADDRESS}
+      - DESTINATION_ADDRESS=${SOPHON_SN_DESTINATION_ADDRESS}
+      - PERCENTAGE=${SOPHON_SN_PERCENTAGE:-5}
+      - PUBLIC_DOMAIN=${SOPHON_SN_PUBLIC_DOMAIN}
+      - PORT=${SOPHON_SN_PORT:-7007}

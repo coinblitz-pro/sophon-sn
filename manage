@@ -1,0 +1,87 @@
+#!/bin/bash
+
+action=${1:-help}
+
+if [ "${action}" == "help" ]; then
+  echo "Usage: $0 <action>"
+  echo "Actions:"
+  echo "  start      Start the node"
+  echo "  stop       Stop the node"
+  echo "  restart    Restart the node"
+  echo "  logs       Show the logs"
+  echo "  prepare    Prepare the environment"
+  echo "  build      Build the Docker images"
+  echo "  reset      Stop the containers and remove all data"
+  exit 0
+fi
+
+function prepare() {
+  if ! command -v docker >/dev/null 2>&1; then
+    curl https://get.docker.com | sh
+    if [[ $USER != "root" ]]; then
+      sudo usermod -aG docker "$USER"
+      echo "⚠️ You need logging out and back in again"
+      exit 1
+    fi
+  fi
+}
+
+function configure() {
+  if [[ ! -f ".env" ]]; then
+    cp ".env.example" ".env"
+
+    function specify_env_variable() {
+      local prompt=$1
+      local variable=$2
+      local value=${!variable:-${3}}
+
+      if [[ $DEBIAN_FRONTEND == "noninteractive" ]]; then
+        export "$variable"="$value"
+      else
+        read -r -e -p "${prompt} " -i "${value}" "${variable?}"
+      fi
+
+      sed -i "s@$variable=@$variable=${!variable}@g" ".env"
+    }
+
+    specify_env_variable "Specify docker image name:" SOPHON_SN_IMAGE
+    specify_env_variable "Specify docker image tag:" SOPHON_SN_IMAGE_TAG
+
+    specify_env_variable "Specify you operator wallet address:" SOPHON_SN_OPERATOR_ADDRESS
+    specify_env_variable "Specify the rewards destination wallet address:" SOPHON_SN_DESTINATION_ADDRESS
+    specify_env_variable "Specify the percentage this node will charge as rewards fee from delegators:" SOPHON_SN_PERCENTAGE
+
+    if [[ "${SOPHON_SN_IMAGE}" == "lagunovsky/sophon-sn" ]]; then
+      specify_env_variable "Specify public domain (leave empty for setup automatically):" SOPHON_SN_PUBLIC_DOMAIN
+    else
+      specify_env_variable "Specify public domain:" SOPHON_SN_PUBLIC_DOMAIN
+    fi
+
+    specify_env_variable "Specify port:" SOPHON_SN_PORT
+  else
+    echo "Using existing .env file"
+    source ".env"
+  fi
+}
+
+if [ "${action}" == "start" ]; then
+  prepare
+  configure
+  docker compose up -d
+elif [ "${action}" == "stop" ]; then
+  docker compose down
+elif [ "${action}" == "restart" ]; then
+  docker compose down
+  docker compose up -d
+elif [ "${action}" == "logs" ]; then
+  docker compose logs node -f
+elif [ "${action}" == "prepare" ]; then
+  prepare
+elif [ "${action}" == "build" ]; then
+  docker compose build
+elif [ "${action}" == "reset" ]; then
+  reset
+else
+  help
+  exit 1
+fi
