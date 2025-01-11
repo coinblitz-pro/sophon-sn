@@ -29,6 +29,7 @@ function prepare() {
 function configure() {
   if [[ ! -f ".env" ]]; then
     cp ".env.example" ".env"
+    source ".env"
 
     function specify_env_variable() {
       local prompt=$1
