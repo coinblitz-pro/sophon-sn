@@ -17,6 +17,8 @@ RUN apt-get update && \
 
 WORKDIR /app
 
+RUN echo "${BUILD_TYPE}" > environment
+
 COPY --from=builder /app/target/release/sophon-node /app/
 RUN chmod +x sophon-node
 
