@@ -21,4 +21,6 @@ services:
       - PUBLIC_DOMAIN=${SOPHON_SN_PUBLIC_DOMAIN}
       - PORT=${SOPHON_SN_PORT:-7007}
     volumes:
-      - ./data/avail:/root/.avail
+      - ./data/avail/identity:/root/.avail/identity
+      - ./data/avail/config:/root/.avail/mainnet/config
+      - ./data/avail/data:/root/.avail/mainnet/data
