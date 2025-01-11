@@ -52,11 +52,10 @@ function configure() {
     specify_env_variable "Specify the rewards destination wallet address:" SOPHON_SN_DESTINATION_ADDRESS
     specify_env_variable "Specify the percentage this node will charge as rewards fee from delegators:" SOPHON_SN_PERCENTAGE
 
-    if [[ "${SOPHON_SN_IMAGE}" == "sophonhub/sophon-light-node" ]]; then
-      specify_env_variable "Specify public domain:" SOPHON_SN_PUBLIC_DOMAIN
-    fi
-
     specify_env_variable "Specify port:" SOPHON_SN_PORT
+    if [[ "${SOPHON_SN_IMAGE}" == "sophonhub/sophon-light-node" ]]; then
+      specify_env_variable "Specify public domain:" SOPHON_SN_PUBLIC_DOMAIN "http://$(curl -s https://checkip.amazonaws.com):$SOPHON_SN_PORT"
+    fi
   else
     echo "Using existing .env file"
     source ".env"
