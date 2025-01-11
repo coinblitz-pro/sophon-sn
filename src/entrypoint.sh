@@ -7,4 +7,16 @@ if [ -z "$PUBLIC_DOMAIN" ]; then
   echo "setting PUBLIC_DOMAIN to $PUBLIC_DOMAIN"
 fi
 
-exec "$@"
+if [ "$#" -eq 0 ]; then
+  exec /app/sophon-node \
+    ${OPERATOR_ADDRESS:+--operator $OPERATOR_ADDRESS} \
+    ${DESTINATION_ADDRESS:+--destination $DESTINATION_ADDRESS} \
+    ${PERCENTAGE:+--percentage $PERCENTAGE} \
+    ${IDENTITY:+--identity $IDENTITY} \
+    ${PUBLIC_DOMAIN:+--public-domain $PUBLIC_DOMAIN} \
+    ${MONITOR_URL:+--monitor-url $MONITOR_URL} \
+    ${NETWORK:+--network $NETWORK} \
+    ${AUTO_UPGRADE:+--auto-upgrade $AUTO_UPGRADE}
+else
+  exec "$@"
+fi
