@@ -20,3 +20,5 @@ services:
       - PERCENTAGE=${SOPHON_SN_PERCENTAGE:-5}
       - PUBLIC_DOMAIN=${SOPHON_SN_PUBLIC_DOMAIN}
       - PORT=${SOPHON_SN_PORT:-7007}
+    volumes:
+      - ./data/avail:/root/.avail
