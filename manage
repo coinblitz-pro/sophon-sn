@@ -52,9 +52,7 @@ function configure() {
     specify_env_variable "Specify the rewards destination wallet address:" SOPHON_SN_DESTINATION_ADDRESS
     specify_env_variable "Specify the percentage this node will charge as rewards fee from delegators:" SOPHON_SN_PERCENTAGE
 
-    if [[ "${SOPHON_SN_IMAGE}" == "lagunovsky/sophon-sn" ]]; then
-      specify_env_variable "Specify public domain (leave empty for setup automatically):" SOPHON_SN_PUBLIC_DOMAIN
-    else
+    if [[ "${SOPHON_SN_IMAGE}" == "sophonhub/sophon-light-node" ]]; then
       specify_env_variable "Specify public domain:" SOPHON_SN_PUBLIC_DOMAIN
     fi
 

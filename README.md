@@ -8,6 +8,10 @@ cd sophon-sn
 ./manage start
 ```
 
+## Images
+
+By default, the image `lagunovsky/sophon-sn` is used. You can build your own image from the source code using the command `./manage build`, or use the original image `sophonhub/sophon-light-node` (in this case, you will need to specify `SOPHON_SN_PUBLIC_DOMAIN` in the `.env` file).
+
 ## Available commands
 
 | Command            | Description                                                          |
