@@ -42,7 +42,7 @@ function configure() {
         read -r -e -p "${prompt} " -i "${value}" "${variable?}"
       fi
 
-      sed -i "s@$variable=[^\s#$]*@$variable=${!variable}@g" ".env"
+      sed -i "s@$variable=[^[:space:]#]*@$variable=${!value}@g" .env
     }
 
     specify_env_variable "Specify docker image name:" SOPHON_SN_IMAGE
@@ -79,6 +79,7 @@ elif [ "${action}" == "logs" ]; then
 elif [ "${action}" == "prepare" ]; then
   prepare
 elif [ "${action}" == "build" ]; then
+  configure
   docker compose build
 elif [ "${action}" == "reset" ]; then
   reset
