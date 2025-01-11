@@ -24,3 +24,4 @@ services:
       - ./data/avail/identity:/root/.avail/identity
       - ./data/avail/config:/root/.avail/mainnet/config
       - ./data/avail/data:/root/.avail/mainnet/data
+      - ./data/avail/path:/app/avail_path
